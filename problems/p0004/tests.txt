@@ -1,0 +1,61 @@
+=== TEST CASE 1 ===
+INPUT:
+1
+1
+y
+OUTPUT:
+No
+
+=== TEST CASE 2 ===
+INPUT:
+3
+3
+Yes
+4
+yess
+3
+SeY
+OUTPUT:
+Yes
+No
+Yes
+
+=== TEST CASE 3 ===
+INPUT:
+1
+3
+YES
+OUTPUT:
+Yes
+
+=== TEST CASE 4 ===
+INPUT:
+1
+3
+sEy
+OUTPUT:
+Yes
+
+=== TEST CASE 5 ===
+INPUT:
+1
+6
+yEsSEy
+OUTPUT:
+Yes
+
+=== TEST CASE 6 ===
+INPUT:
+1
+7
+yesseyS
+OUTPUT:
+No
+
+=== TEST CASE 7 ===
+INPUT:
+1
+9
+yesyesyes
+OUTPUT:
+Yes

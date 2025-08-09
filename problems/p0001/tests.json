@@ -1,0 +1,18 @@
+[
+  {
+    "input": "kou\nyukari",
+    "output": "kouari\nyuk"
+  },
+  {
+    "input": "hello\nworld",
+    "output": "hellorld\nwo"
+  },
+  {
+    "input": "test\nabcdef",
+    "output": "testdef\nabc"
+  },
+  {
+    "input": "a\nb",
+    "output": "ab\n"
+  }
+]

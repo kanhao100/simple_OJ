@@ -1,0 +1,38 @@
+=== TEST CASE 1 ===
+INPUT:
+kou
+yukari
+OUTPUT:
+kouari
+yuk
+
+=== TEST CASE 2 ===
+INPUT:
+hello
+world
+OUTPUT:
+hellorld
+wo
+
+=== TEST CASE 3 ===
+INPUT:
+test
+abcdef
+OUTPUT:
+testdef
+abc
+
+=== TEST CASE 4 ===
+INPUT:
+a
+b
+OUTPUT:
+ab
+
+=== TEST CASE 5 ===
+INPUT:
+??
+(ak90 r)
+OUTPUT:
+??0 r)
+(ak9
