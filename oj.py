@@ -158,15 +158,25 @@ class OJTester:
     def get_compiler_command(self, lang: str, source_file: Path, output_file: Path) -> List[str]:
         """获取编译命令"""
         if lang == "cpp":
-            base_cmd = ["g++", "-std=c++17", "-O2", "-o", str(output_file), str(source_file)]
             if self.use_wsl:
+                # 将Windows路径转换为WSL路径格式
+                wsl_source = str(source_file).replace('\\', '/').replace('E:', '/mnt/e')
+                wsl_output = str(output_file).replace('\\', '/').replace('E:', '/mnt/e')
+                base_cmd = ["g++", "-std=c++17", "-O2", "-o", wsl_output, wsl_source]
                 return ["wsl"] + base_cmd
-            return base_cmd
+            else:
+                base_cmd = ["g++", "-std=c++17", "-O2", "-o", str(output_file), str(source_file)]
+                return base_cmd
         elif lang == "c":
-            base_cmd = ["gcc", "-std=c99", "-O2", "-o", str(output_file), str(source_file)]
             if self.use_wsl:
+                # 将Windows路径转换为WSL路径格式
+                wsl_source = str(source_file).replace('\\', '/').replace('E:', '/mnt/e')
+                wsl_output = str(output_file).replace('\\', '/').replace('E:', '/mnt/e')
+                base_cmd = ["gcc", "-std=c99", "-O2", "-o", wsl_output, wsl_source]
                 return ["wsl"] + base_cmd
-            return base_cmd
+            else:
+                base_cmd = ["gcc", "-std=c99", "-O2", "-o", str(output_file), str(source_file)]
+                return base_cmd
         elif lang == "java":
             # Java需要特殊处理
             return ["javac", str(source_file)]
@@ -180,7 +190,9 @@ class OJTester:
         """获取运行命令"""
         if lang in ["cpp", "c"]:
             if self.use_wsl:
-                return ["wsl", str(executable).replace('\\', '/')]
+                # 将Windows路径转换为WSL路径格式
+                wsl_executable = str(executable).replace('\\', '/').replace('E:', '/mnt/e')
+                return ["wsl", wsl_executable]
             return [str(executable)]
         elif lang == "java":
             class_name = executable.stem

@@ -1,0 +1,6 @@
+=== TEST CASE 1 ===
+INPUT:
+9
+1 2 0 3 4 0 0 0 5
+OUTPUT:
+3
