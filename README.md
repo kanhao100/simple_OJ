@@ -32,7 +32,23 @@ local_OJ/
 
 ## 🚀 快速开始
 
-### 1. 列出所有可用问题
+### 1. 环境检查
+```bash
+python oj.py --env
+```
+这将显示当前环境信息，包括Python版本、操作系统和编译器状态。
+
+### 2. 自动环境配置（推荐）
+```bash
+python setup_environment.py
+```
+这个脚本会：
+- 自动检测当前环境
+- 提供多种配置选项让您选择
+- 根据您的选择安装相应编译器
+- 支持MinGW-w64、WSL等环境配置
+
+### 3. 列出所有可用问题
 ```bash
 python oj.py --list
 ```
@@ -178,7 +194,31 @@ python oj.py [选项]
   --clean, -c      清理构建产物
   --wsl            在 Windows 上强制使用 WSL
   --timeout, -t    执行超时时间(秒) (默认: 5)
+  --env            显示环境信息和编译器状态
 ```
+
+### 新功能说明
+
+#### 环境信息显示
+```bash
+python oj.py --env
+```
+显示当前系统的详细信息：
+- Python版本
+- 操作系统信息
+- 编译器可用状态
+- 环境配置建议
+
+#### 自动环境配置
+```bash
+python setup_environment.py
+```
+自动检测并帮助配置环境：
+- 检查Python版本
+- 检测编译器状态
+- 自动安装MinGW-w64（Windows）
+- 创建桌面快捷方式
+- 提供详细的配置指导
 
 ## 🎯 示例问题
 
@@ -194,12 +234,42 @@ python oj.py [选项]
 
 ## 🔧 环境要求
 
+### 基础环境
 - **Python 3.6+** (必需)
-- **C++ 编译器** (可选，用于 C++ 解法)
-  - Linux: `g++`
-  - Windows: MinGW-w64 或 Visual Studio Build Tools
-  - WSL: Ubuntu 的 `g++`
-- **Java JDK** (可选，用于 Java 解法)
+
+### 编译器支持（按推荐程度排序）
+1. **便携式版本** ⭐⭐⭐⭐⭐
+   - 下载包含MinGW-w64的完整包
+   - 解压即用，无需配置
+   - 推荐给大多数用户
+
+2. **Python (最简单)** ⭐⭐⭐⭐⭐
+   - 内置，无需额外安装
+   - 兼容性最好
+   - 推荐新手使用
+
+3. **自动配置**
+   ```bash
+   python setup_environment.py
+   ```
+
+4. **手动安装编译器**
+   - **C++ 编译器**: MinGW-w64 (推荐) 或 Visual Studio Build Tools
+   - **Java JDK**: OpenJDK 或 Oracle JDK
+   - **C 编译器**: GCC (通常与C++编译器一起安装)
+
+### 便携式版本使用方法
+```bash
+# 1. 运行打包脚本（开发者）
+python package_oj.py
+
+# 2. 解压生成的压缩包
+# 3. 运行启动脚本
+./start_oj.sh --env          # Linux/macOS
+start_oj.bat --env          # Windows
+```
+
+**注意**: 便携式版本使用MSYS2作为MinGW-w64环境，提供了完整的Linux工具链。
 
 ## 💡 使用提示
 

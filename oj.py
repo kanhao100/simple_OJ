@@ -42,7 +42,7 @@ class OJTester:
         self.problems_dir = Path("problems")
         self.build_dir = Path("build")
         self.results = []
-        
+
         # 在Windows下检测颜色支持
         if platform.system() == "Windows" and os.environ.get('TERM') != 'xterm':
             try:
@@ -52,7 +52,106 @@ class OJTester:
                 kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
             except:
                 Colors.disable()
-    
+
+        # 检测和设置环境
+        self.setup_environment()
+
+    def setup_environment(self):
+        """设置和检测运行环境"""
+        # 检查Python版本
+        python_version = sys.version_info
+        if python_version < (3, 6):
+            self.print_warning(f"Python版本 {python_version.major}.{python_version.minor} 可能不支持所有功能，建议升级到3.6+")
+
+        # 检查编译器
+        self.check_compilers()
+
+    def check_compilers(self):
+        """检查可用编译器"""
+        self.compilers = {
+            'cpp': self.find_cpp_compiler(),
+            'c': self.find_c_compiler(),
+            'java': self.find_java_compiler(),
+            'python': True  # Python始终可用
+        }
+
+    def find_cpp_compiler(self) -> Optional[str]:
+        """查找C++编译器"""
+        compilers = ['g++', 'clang++']
+
+        # 检查PATH中的编译器
+        for compiler in compilers:
+            if self.is_command_available(compiler):
+                return compiler
+
+        # Windows: 检查常用安装路径
+        if platform.system() == "Windows":
+            common_paths = [
+                r"C:\mingw64\bin\g++.exe",
+                r"C:\Program Files\mingw-w64\x86_64-8.1.0-win32-seh-rt_v6-rev0\mingw64\bin\g++.exe",
+                r"C:\MinGW\bin\g++.exe"
+            ]
+            for path in common_paths:
+                if os.path.exists(path):
+                    return path
+
+        return None
+
+    def find_c_compiler(self) -> Optional[str]:
+        """查找C编译器"""
+        compilers = ['gcc', 'clang']
+
+        for compiler in compilers:
+            if self.is_command_available(compiler):
+                return compiler
+
+        # Windows: 检查常用安装路径
+        if platform.system() == "Windows":
+            common_paths = [
+                r"C:\mingw64\bin\gcc.exe",
+                r"C:\Program Files\mingw-w64\x86_64-8.1.0-win32-seh-rt_v6-rev0\mingw64\bin\gcc.exe",
+                r"C:\MinGW\bin\gcc.exe"
+            ]
+            for path in common_paths:
+                if os.path.exists(path):
+                    return path
+
+        return None
+
+    def find_java_compiler(self) -> Optional[str]:
+        """查找Java编译器"""
+        if self.is_command_available('javac'):
+            return 'javac'
+        return None
+
+    def is_command_available(self, command: str) -> bool:
+        """检查命令是否可用"""
+        try:
+            subprocess.run([command, '--version'],
+                         capture_output=True,
+                         check=True,
+                         timeout=5)
+            return True
+        except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+            return False
+
+    def print_environment_info(self):
+        """打印环境信息"""
+        self.print_header("环境信息")
+
+        print(f"Python版本: {sys.version.split()[0]}")
+        print(f"操作系统: {platform.system()} {platform.release()}")
+
+        print(f"\n编译器状态:")
+        for lang, compiler in self.compilers.items():
+            if lang == 'python':
+                status = f"{Colors.GREEN}✓ 可用{Colors.END}"
+            elif compiler:
+                status = f"{Colors.GREEN}✓ 找到 ({compiler}){Colors.END}"
+            else:
+                status = f"{Colors.RED}✗ 未找到{Colors.END}"
+            print(f"  {lang.upper():4}: {status}")
+
     def print_header(self, text: str):
         """打印标题"""
         print(f"\n{Colors.CYAN}{Colors.BOLD}{'='*60}{Colors.END}")
@@ -282,6 +381,8 @@ class OJTester:
             if not self.use_wsl and platform.system() == "Windows":
                 self.print_info("提示: 在Windows上可以尝试使用 --wsl 选项")
                 self.print_info("或者安装 MinGW-w64 或 Visual Studio Build Tools")
+                self.print_info("推荐下载: https://www.mingw-w64.org/downloads/")
+                self.print_info("或者使用打包版本（包含编译器）")
             return None
 
     def run_single_test(self, executable: Path, lang: str, test_input: str) -> Tuple[bool, str, str, float]:
@@ -525,6 +626,7 @@ def main():
     parser.add_argument("--timeout", "-t", type=int, default=5, help="执行超时时间(秒) (默认: 5)")
     parser.add_argument("--list", action="store_true", help="列出所有可用的问题")
     parser.add_argument("--new", "-n", help="创建新问题（指定问题名称，如: p0004）")
+    parser.add_argument("--env", action="store_true", help="显示环境信息")
     
     args = parser.parse_args()
     
@@ -541,10 +643,14 @@ def main():
             tester.print_warning("没有找到任何问题")
         return
     
+    if args.env:
+        tester.print_environment_info()
+        return
+
     if args.new:
         tester.create_new_problem(args.new)
         return
-    
+
     if args.clean:
         if args.problem:
             tester.clean_build(args.problem)
