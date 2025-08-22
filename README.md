@@ -2,6 +2,14 @@
 
 这是一个功能完整的本地 OJ 测试系统，支持多个测试用例、多种编程语言、跨平台运行（Windows/WSL/Linux）。
 
+## ✨ 极简快速开始
+0. 下载released中的压缩包，无需python和cpp环境。
+1. 打开命令行：
+方法1（win11）: 右键“在终端中打开”
+方法2（win10/11）: 在地址行输入cmd，回车
+2. 命令行中敲入`start_oj.bat -p p0001 -l cpp`，即可编译c++，测试python仅需把cpp改成python.
+3. 添加新题目`start_oj.bat -new p0007`
+
 ## ✨ 主要特性
 
 - 🔥 **多语言支持**: C++, C, Java, Python
