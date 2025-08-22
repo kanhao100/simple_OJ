@@ -297,7 +297,14 @@ class OJTester:
             class_name = executable.stem
             return ["java", "-cp", str(executable.parent), class_name]
         elif lang == "python":
-            return ["python", str(executable)]
+            # 优先使用便携Python（环境变量控制）
+            portable_python = os.environ.get('PORTABLE_PYTHON')
+            if portable_python and os.path.exists(portable_python):
+                self.print_info(f"使用便携Python: {portable_python}")
+                return [portable_python, str(executable)]
+            else:
+                self.print_info("使用系统Python")
+                return ["python", str(executable)]
         else:
             raise ValueError(f"不支持的语言: {lang}")
 
